@@ -8,7 +8,7 @@
             </div>
             <draggable
               class="list-group h-screen"
-              :list="toDo"
+              :list="store.toDo"
               group="people"
               @change="log"
               itemKey="name"
@@ -30,7 +30,7 @@
             </div>
             <draggable
               class="list-group h-screen"
-              :list="inProgress"
+              :list="store.inProgress"
               group="people"
               @change="log"
               itemKey="name"
@@ -52,7 +52,7 @@
             </div>
             <draggable
               class="list-group h-screen"
-              :list="done"
+              :list="store.done"
               group="people"
               @change="log"
               itemKey="name"
@@ -62,7 +62,7 @@
                   <header class="rounded-t-md border bg-green-300 h-[20px]"></header>
                   <div class="border-l border-r flex justify-between border-b min-h-[50px] h-full bg-white px-1">
                     <div>{{ element.name }}</div>
-                    <div class="self-center"><i  @click="deleteItem(index)" class="fa-solid fa-trash"></i></div>
+                    <div class="self-center"><i  @click="store.removeTask(index)" class="fa-solid fa-trash"></i></div>
                   </div>
                   </div>
               </template>
@@ -80,33 +80,22 @@
  </div>
   </template>
   <script setup>
+    import { useTasksStore } from '@/store/tasks';
     import {ref} from 'vue';
     import draggable from 'vuedraggable';
 
+    const store = useTasksStore()
     const isShowForm = ref(false)
     const newTask = ref('')
     const order = ref(1)
-    const toDo = ref([
-        { name: "John", id: 1 },
-    ])
-    const inProgress = ref([
-        { name: "John", id: 2 },
-    ])
-    const done = ref([
-        { name: "John", id: 3 },
-    ])
+
 
     function log (evt) {
         window.console.log(evt)
-    } function addTask () {
-        toDo.value.push({
-            name: newTask.value,
-            id: toDo.value.length
-        })
+    } 
+    function addTask () {
+        store.addTask(newTask.value)
         newTask.value = '';
         isShowForm.value = false;
-    }
-    function deleteItem(index) {
-      done.value.splice(index, 1);
     }
 </script>
