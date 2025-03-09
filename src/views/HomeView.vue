@@ -23,7 +23,6 @@
               </template>
             </draggable>
           </div>
-      
           <div class="min-w-[350px] bg-gray-100 h-screen border">
             <div class="bg-yellow-300 py-4 px-2 mb-2" >
               <h3>In progress</h3>
