@@ -8,9 +8,9 @@
             </div>
             <draggable
               class="list-group h-screen"
-              :list="toDo"
+              :list="store.toDo"
               group="people"
-              @change="log"
+              @change="dataLog"
               itemKey="name"
             >
               <template #item="{ element}">
@@ -30,9 +30,9 @@
             </div>
             <draggable
               class="list-group h-screen"
-              :list="inProgress"
+              :list="store.inProgress"
               group="people"
-              @change="log"
+              @change="dataLog"
               itemKey="name"
             >
               <template #item="{ element}">
@@ -52,9 +52,9 @@
             </div>
             <draggable
               class="list-group h-screen"
-              :list="done"
+              :list="store.done"
               group="people"
-              @change="log"
+              @change="dataLog"
               itemKey="name"
             >
               <template #item="{ element, index}">
@@ -62,7 +62,7 @@
                   <header class="rounded-t-md border bg-green-300 h-[20px]"></header>
                   <div class="border-l border-r flex justify-between border-b min-h-[50px] h-full bg-white px-1">
                     <div>{{ element.name }}</div>
-                    <div class="self-center"><i  @click="deleteItem(index)" class="fa-solid fa-trash"></i></div>
+                    <div class="self-center"><i  @click="store.removeTaskAction(index)" class="fa-solid fa-trash"></i></div>
                   </div>
                   </div>
               </template>
@@ -74,39 +74,47 @@
             <form class="flex flex-col items-center border bg-white " @submit.prevent="addTask">
                 <div class="self-end m-1"><i @click="isShowForm = false" class="fa-solid fa-square-xmark"></i></div>
                 <input class="border m-4 p-2" type="text" name="task" v-model="newTask" placeholder="Add new task...">
-                <button type="submit m-4">Add new task</button>
+                <button type="submit" class=" m-4 border rounded py-2 px-4">Add new task</button>
             </form>
         </div>
  </div>
   </template>
   <script setup>
-    import {ref} from 'vue';
+    import { useTasksStore } from '@/store/tasks';
+    import {onUpdated, ref} from 'vue';
     import draggable from 'vuedraggable';
 
+    const store = useTasksStore()
     const isShowForm = ref(false)
     const newTask = ref('')
     const order = ref(1)
-    const toDo = ref([
-        { name: "John", id: 1 },
-    ])
-    const inProgress = ref([
-        { name: "John", id: 2 },
-    ])
-    const done = ref([
-        { name: "John", id: 3 },
-    ])
 
-    function log (evt) {
+    function log1 (evt) {
+      if(evt == 'added') {
+        console.log('add')
+      }
+      if(evt == 'remove') {
+        console.log('remove')
+      }
+    } 
+    function log2 (evt) {
         window.console.log(evt)
-    } function addTask () {
-        toDo.value.push({
-            name: newTask.value,
-            id: toDo.value.length
-        })
+    }
+    function log3 (evt) {
+        window.console.log(evt)
+        let {removed, added} = evt;
+        
+        console.log(added.element, added.newIndex);
+    } 
+
+    function dataLog () {
+      console.log(store.toDo)
+      console.log(store.inProgress)
+      console.log(store.done)
+    }
+    function addTask () {
+        store.addTaskAction(newTask.value)
         newTask.value = '';
         isShowForm.value = false;
-    }
-    function deleteItem(index) {
-      done.value.splice(index, 1);
     }
 </script>
