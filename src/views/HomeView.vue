@@ -69,19 +69,15 @@
           </div>
         </div>
 
-        <div v-if="isShowForm" class="absolute t-0 l-0 flex justify-center items-center bg-gray-400 w-screen h-screen z-[10]">
-            <form class="flex flex-col items-center border bg-white " @submit.prevent="addTask">
-                <div class="self-end m-1"><i @click="isShowForm = false" class="fa-solid fa-square-xmark"></i></div>
-                <input class="border m-4 p-2" type="text" name="task" v-model="newTask" placeholder="Add new task...">
-                <button type="submit" class=" m-4 border rounded py-2 px-4">Add new task</button>
-            </form>
-        </div>
+        <AddTaskForm v-if="isShowForm" @addNewTask="addTask"/>
+        
  </div>
   </template>
   <script setup>
     import { useTasksStore } from '@/store/tasks';
-    import {onUpdated, ref} from 'vue';
+    import {ref} from 'vue';
     import draggable from 'vuedraggable';
+    import AddTaskForm from '@/components/AddTaskForm.vue';
 
     const store = useTasksStore()
     const isShowForm = ref(false)
@@ -111,9 +107,8 @@
       console.log(store.inProgress)
       console.log(store.done)
     }
-    function addTask () {
-        store.addTaskAction(newTask.value)
-        newTask.value = '';
-        isShowForm.value = false;
+    function addTask (data) {
+        store.addTaskAction(data.newTask)
+        isShowForm.value = data.formVisible
     }
 </script>
